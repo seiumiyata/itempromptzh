@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提示生成工具 - セイウ株式会社</title>
+  <style>
+    body{font-family:Arial,sans-serif;background-color:#f0f0f0;margin:0;padding:20px}
+    h1{color:#004080;text-align:center}
+    form{background-color:#fff;padding:20px;border-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+    label{display:block;margin-bottom:10px;color:#333}
+    input[type=text],input[type=number]{width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box;margin-bottom:20px}
+    input[type=checkbox]{margin-right:5px}
+    input[type=submit],button{background-color:#004080;color:#fff;padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-size:16px}
+    input[type=submit]:hover,button:hover{background-color:#002d5b}
+    #output{background-color:#fff;padding:20px;border-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,.1);white-space:pre-wrap;margin-top:20px}
+  </style>
+</head>
+<body>
+  <h1>提示生成工具 - セイウ株式会社</h1>
+  <form id="promptForm">
+    <label for="companyName">公司名称:</label>
+    <input type="text" id="companyName" name="companyName" value="セイウ株式会社">
+    <label for="personInCharge">负责人姓名:</label>
+    <input type="text" id="personInCharge" name="personInCharge">
+    <label for="productName">产品名称:</label>
+    <input type="text" id="productName" name="productName">
+    <label for="relatedKeywords">与产品相关的关键词（逗号分隔）:</label>
+    <input type="text" id="relatedKeywords" name="relatedKeywords">
+    <label for="targetIndustry">目标行业或业态:</label>
+    <input type="text" id="targetIndustry" name="targetIndustry">
+    <label for="pageCount">演示文稿的页数:</label>
+    <input type="number" id="pageCount" name="pageCount">
+    <h2>请选择要在演示文稿中包含的部分:</h2>
+    <input type="checkbox" id="executiveSummary" name="sections" value="摘要">
+    <label for="executiveSummary">摘要</label><br>
+    <input type="checkbox" id="purposeOfProposal" name="sections" value="提案目的">
+    <label for="purposeOfProposal">提案目的</label><br>
+    <input type="checkbox" id="productOverview" name="sections" value="产品概述">
+    <label for="productOverview">产品概述</label><br>
+    <input type="checkbox" id="marketAnalysis" name="sections" value="市场分析">
+    <label for="marketAnalysis">市场分析</label><br>
+    <input type="checkbox" id="targetCustomers" name="sections" value="目标客户">
+    <label for="targetCustomers">目标客户</label><br>
+    <input type="checkbox" id="competitiveAnalysis" name="sections" value="竞争分析">
+    <label for="competitiveAnalysis">竞争分析</label><br>
+    <input type="checkbox" id="salesStrategy" name="sections" value="销售策略">
+    <label for="salesStrategy">销售策略</label><br>
+    <input type="checkbox" id="marketingPlan" name="sections" value="营销计划">
+    <label for="marketingPlan">营销计划</label><br>
+    <input type="checkbox" id="financialProjections" name="sections" value="财务预测">
+    <label for="financialProjections">财务预测</label><br>
+    <input type="checkbox" id="implementationPlan" name="sections" value="实施计划">
+    <label for="implementationPlan">实施计划</label><br>
+    <input type="checkbox" id="riskAssessment" name="sections" value="风险评估">
+    <label for="riskAssessment">风险评估</label><br>
+    <input type="checkbox" id="appendix" name="sections" value="附录">
+    <label for="appendix">附录</label><br>
+    <input type="checkbox" id="googleSearch" name="googleSearch" checked>
+    <label for="googleSearch">以产品名为关键词进行Google搜索，并参考搜索结果来创建提示</label><br>
+    <input type="submit" value="生成提示">
+  </form>
+  <div id="output"></div>
+  <button id="copyButton" style="display:none">复制提示</button>
+  <script>
+    const form=document.getElementById("promptForm"),output=document.getElementById("output"),copyButton=document.getElementById("copyButton");function generatePrompt(e){e.preventDefault();const t=new FormData(form),n=t.get("productName"),o=t.get("relatedKeywords").split(",").map(e=>e.trim()),r=t.get("pageCount"),a=null!==t.get("googleSearch");let i=`我是${t.get("companyName")}的${t.get("personInCharge")}。\n关于我司的${n}，计划制作针对${t.get("targetIndustry")}的引入提案演示文稿。\n预计在整体上包含以下部分，总页数大约为${r}页。\n\n`;const s=t.getAll("sections");s.length>0&&s.forEach(e=>{i+=`- ${e}\n`}),i+="\n对于上述部分，请求提出演示文稿的大标题和小标题的建议。\n请考虑如何有效传达每个部分的内容并构建结构，同时融入最新的市场动态和趋势。\n\n",i+=`${n}相关的关键词:\n`,o.forEach(e=>{i+=`- ${e}\n`}),a&&(i+=`\n在准备演示文稿时，请以“${n}”为关键词进行Google搜索并参考搜索结果。\n`),i+=`\n演示文稿页数: 约${r}页\n`,output.innerText=i,copyButton.style.display="inline"}function copyPrompt(){navigator.clipboard.writeText(output.innerText).then(()=>{alert("提示已复制到剪贴板。")},e=>{console.error("复制提示失败: ",e)})}form.addEventListener("submit",generatePrompt),copyButton.addEventListener("click",copyPrompt);
+  </script>
+</body>
+</html>
